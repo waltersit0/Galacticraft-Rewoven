@@ -8,10 +8,12 @@ import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCo
 import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleScreen;
 import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorScreen;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
+import com.hrznstudio.galacticraft.client.render.entity.RenderOreAsteroid;
 import com.hrznstudio.galacticraft.client.render.fluid.OilFluidRenderHandler;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.container.screen.PlayerInventoryGCScreen;
 import com.hrznstudio.galacticraft.entity.RocketEntityRenderer;
+import com.hrznstudio.galacticraft.entity.asteroid.OreAsteroidEntity;
 import com.hrznstudio.galacticraft.entity.moonvillager.T1RocketEntity;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
@@ -22,6 +24,7 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.render.entity.DefaultEntityRenderer;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.util.Identifier;
 
@@ -78,6 +81,7 @@ public class GalacticraftClient implements ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.OXYGEN_COLLECTOR_CONTAINER, OxygenCollectorScreen.FACTORY);
 
         EntityRendererRegistry.INSTANCE.register(T1RocketEntity.class, (manager, context) -> new RocketEntityRenderer(manager));
+        EntityRendererRegistry.INSTANCE.register(OreAsteroidEntity.class, (manager, context) -> new RenderOreAsteroid(manager));
         GalacticraftBlockEntityRenderers.register();
 
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.STILL_CRUDE_OIL, new OilFluidRenderHandler());

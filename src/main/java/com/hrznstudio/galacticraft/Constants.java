@@ -412,6 +412,7 @@ public class Constants {
     public static class Entities {
         public static final String MOON_VILLAGER = "moon_villager";
         public static final String T1_ROCKET = "t1_rocket";
+        public static final String ORE_ASTEROID = "ore_asteroid";
     }
 
     public static class TextureCoordinates {

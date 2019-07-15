@@ -5,8 +5,9 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.space.CelestialBody;
 import com.hrznstudio.galacticraft.api.space.CelestialBodyIcon;
 import com.hrznstudio.galacticraft.api.space.RocketTier;
+import com.hrznstudio.galacticraft.misc.RocketTiers;
 import com.hrznstudio.galacticraft.util.registry.CelestialBodyRegistry;
-import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
+import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSourceTypes;
 import com.hrznstudio.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTypes;
 import com.hrznstudio.galacticraft.world.gen.chunk.MoonChunkGeneratorConfig;
 import net.fabricmc.api.EnvType;
@@ -16,11 +17,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.source.BiomeSourceType;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.chunk.ChunkGeneratorType;
+import net.minecraft.world.level.LevelGeneratorType;
+import net.minecraft.world.level.LevelProperties;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -58,9 +59,11 @@ public class MoonDimension extends Dimension implements CelestialBody {
         return new BlockPos(0, 100, 0);
     }
 
-    public ChunkGenerator<?> createChunkGenerator() {
+    public ChunkGenerator<MoonChunkGeneratorConfig> createChunkGenerator() {
         MoonChunkGeneratorConfig moonChunkGeneratorConfig = GalacticraftChunkGeneratorTypes.MOON.createSettings();
-        return ChunkGeneratorType.SURFACE.create(this.world, BiomeSourceType.FIXED.applyConfig(BiomeSourceType.FIXED.getConfig().setBiome(GalacticraftBiomes.MOON)), moonChunkGeneratorConfig);
+        LevelProperties properties = this.world.getLevelProperties();
+        properties.setGeneratorType(LevelGeneratorType.DEFAULT);
+        return GalacticraftChunkGeneratorTypes.MOON.create(this.world, GalacticraftBiomeSourceTypes.MOON.applyConfig(GalacticraftBiomeSourceTypes.MOON.getConfig().setLevelProperties(properties).setGeneratorSettings(moonChunkGeneratorConfig)), moonChunkGeneratorConfig);
     }
 
     @Override
@@ -119,7 +122,7 @@ public class MoonDimension extends Dimension implements CelestialBody {
 
     @Override
     public RocketTier accessTier() {
-        return null;
+        return RocketTiers.tierOne;
     }
 
     @Override

@@ -7,9 +7,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AbsoluteHand;
 import net.minecraft.world.World;
 
-public class EntityMoonVillager extends LivingEntity {
+public class MoonVillagerEntity extends LivingEntity {
 
-    public EntityMoonVillager(EntityType<? extends EntityMoonVillager> entityType, World world) {
+    public MoonVillagerEntity(EntityType<? extends MoonVillagerEntity> entityType, World world) {
         super(entityType, world);
     }
 
