@@ -1,33 +1,37 @@
 package com.hrznstudio.galacticraft.world.biome.source;
 
-import com.hrznstudio.galacticraft.world.gen.chunk.MoonChunkGeneratorConfig;
+import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.biome.source.BiomeSourceConfig;
-import net.minecraft.world.level.LevelProperties;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class MoonBiomeSourceConfig implements BiomeSourceConfig {
+    private Biome[] biomes;
+    private int size;
 
-    private LevelProperties levelProperties;
-    private MoonChunkGeneratorConfig generatorSettings;
-
-    public LevelProperties getLevelProperties() {
-        return this.levelProperties;
+    public MoonBiomeSourceConfig() {
+        this.biomes = new Biome[]{GalacticraftBiomes.MOON, GalacticraftBiomes.MOON_PLAINS};
+        this.size = 1;
     }
 
-    public MoonBiomeSourceConfig setLevelProperties(LevelProperties levelProperties_1) {
-        this.levelProperties = levelProperties_1;
+    public MoonBiomeSourceConfig setBiomes(Biome[] biomes_1) {
+        this.biomes = biomes_1;
         return this;
     }
 
-    public MoonChunkGeneratorConfig getGeneratorSettings() {
-        return this.generatorSettings;
-    }
-
-    public MoonBiomeSourceConfig setGeneratorSettings(MoonChunkGeneratorConfig overworldChunkGeneratorConfig_1) {
-        this.generatorSettings = overworldChunkGeneratorConfig_1;
+    public MoonBiomeSourceConfig setSize(int int_1) {
+        this.size = int_1;
         return this;
     }
 
+    public Biome[] getBiomes() {
+        return this.biomes;
+    }
+
+    public int getSize() {
+        return this.size;
+    }
 }
