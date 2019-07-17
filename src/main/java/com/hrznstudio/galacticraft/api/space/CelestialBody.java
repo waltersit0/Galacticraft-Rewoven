@@ -1,6 +1,8 @@
 package com.hrznstudio.galacticraft.api.space;
 
 
+import net.minecraft.block.Block;
+
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
@@ -46,4 +48,10 @@ public interface CelestialBody {
      * @return translated string of body's name.
      */
     String getName();
+
+    /**
+     *
+     * @return an array of blocks that can fall out of the sky.
+     */
+    Block[] getOreAsteroidBlocks();
 }

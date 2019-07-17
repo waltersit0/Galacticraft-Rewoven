@@ -62,10 +62,10 @@ public class GalacticraftCommands {
     }
 
     private static void teleport(Entity entity, ServerWorld world) {
-        BlockPos spawnPos = world.getSpawnPos();
-        double x = spawnPos.getX();
-        double y = spawnPos.getY();
-        double z = spawnPos.getZ();
+        //BlockPos spawnPos = world.getSpawnPos();
+        double x = 0;//spawnPos.getX();
+        double y = 255;//spawnPos.getY();
+        double z = 0;//spawnPos.getZ();
 
         if (entity instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) entity;

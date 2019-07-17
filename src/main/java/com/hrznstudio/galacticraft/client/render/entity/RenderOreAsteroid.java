@@ -5,7 +5,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.block.BlockRenderManager;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.util.Identifier;
@@ -19,7 +18,6 @@ public class RenderOreAsteroid extends EntityRenderer<OreAsteroidEntity>
 
     @Override
     public void render(OreAsteroidEntity asteroid, double x, double y, double z, float f, float partialTickTime) {
-        BlockRenderManager manager = MinecraftClient.getInstance().getBlockRenderManager();
         GlStateManager.disableRescaleNormal();
 
         GlStateManager.pushMatrix();
@@ -27,7 +25,9 @@ public class RenderOreAsteroid extends EntityRenderer<OreAsteroidEntity>
         GlStateManager.rotatef(asteroid.pitch, 1, 0, 0);
         GlStateManager.rotatef(asteroid.yaw, 0, 1, 0);
 
-        manager.renderDynamic(asteroid.getAsteroidType().getDefaultState(), 1.0F);
+        try {
+            MinecraftClient.getInstance().getBlockRenderManager().renderDynamic(asteroid.getAsteroidType().getDefaultState(), 1.0F);
+        } catch (NullPointerException ignore) {}
 
         GlStateManager.popMatrix();
 

@@ -4,22 +4,17 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
-import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.entity.asteroid.OreAsteroidEntity;
+import com.hrznstudio.galacticraft.entity.asteroid.SpaceDebrisEntity;
 import net.fabricmc.fabric.impl.network.ClientSidePacketRegistryImpl;
 import net.fabricmc.fabric.impl.network.ServerSidePacketRegistryImpl;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
 
 import java.util.UUID;
 
@@ -124,6 +119,32 @@ public class GalacticraftPackets {
             float yaw = (byteBuf.readByte() * 360) / 256.0F;
             Runnable spawn = () -> {
                 OreAsteroidEntity entity = new OreAsteroidEntity(type, MinecraftClient.getInstance().world);
+                entity.setAsteroidType(Registry.BLOCK.get(blockID));
+                entity.method_18003(x, y, z);
+                entity.x = x;
+                entity.y = y;
+                entity.z = z;
+                entity.pitch = pitch;
+                entity.yaw = yaw;
+                entity.setEntityId(entityID);
+                entity.setUuid(entityUUID);
+                MinecraftClient.getInstance().world.addEntity(entityID, entity);
+            };
+            context.getTaskQueue().execute(spawn);
+        }));
+
+        ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "debris_entity_spawn"), ((context, byteBuf) -> {
+            EntityType<SpaceDebrisEntity> type = (EntityType<SpaceDebrisEntity>) Registry.ENTITY_TYPE.get(byteBuf.readVarInt());
+            int entityID = byteBuf.readVarInt();
+            UUID entityUUID = byteBuf.readUuid();
+            Identifier blockID = byteBuf.readIdentifier();
+            double x = byteBuf.readDouble();
+            double y = byteBuf.readDouble();
+            double z = byteBuf.readDouble();
+            float pitch = (byteBuf.readByte() * 360) / 256.0F;
+            float yaw = (byteBuf.readByte() * 360) / 256.0F;
+            Runnable spawn = () -> {
+                SpaceDebrisEntity entity = new SpaceDebrisEntity(type, MinecraftClient.getInstance().world);
                 entity.setAsteroidType(Registry.BLOCK.get(blockID));
                 entity.method_18003(x, y, z);
                 entity.x = x;

@@ -5,27 +5,31 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.space.CelestialBody;
 import com.hrznstudio.galacticraft.api.space.CelestialBodyIcon;
 import com.hrznstudio.galacticraft.api.space.RocketTier;
+import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
+import com.hrznstudio.galacticraft.entity.asteroid.OreAsteroidEntity;
 import com.hrznstudio.galacticraft.misc.RocketTiers;
 import com.hrznstudio.galacticraft.util.registry.CelestialBodyRegistry;
-import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSourceTypes;
 import com.hrznstudio.galacticraft.world.biome.source.MoonBiomeSourceConfig;
 import com.hrznstudio.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTypes;
 import com.hrznstudio.galacticraft.world.gen.chunk.MoonChunkGeneratorConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.source.BiomeSource;
-import net.minecraft.world.biome.source.CheckerboardBiomeSourceConfig;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.level.LevelGeneratorType;
-import net.minecraft.world.level.LevelProperties;
+
+import java.util.Random;
+import java.util.function.Consumer;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -182,5 +186,11 @@ public class MoonDimension extends Dimension implements CelestialBody {
     @Override
     public String getName() {
         return "moon";
+    }
+
+    @Override
+    public Block[] getOreAsteroidBlocks() {
+        //TODO: SOLID_METEORIC_IRON_ORE
+        return new Block[] {GalacticraftBlocks.SOLID_METEORIC_IRON_BLOCK, GalacticraftBlocks.MOON_ROCK, GalacticraftBlocks.MOON_COPPER_ORE, GalacticraftBlocks.MOON_TIN_ORE};
     }
 }

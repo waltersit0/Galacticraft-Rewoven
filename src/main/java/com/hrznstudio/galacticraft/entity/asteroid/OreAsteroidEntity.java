@@ -1,9 +1,11 @@
 package com.hrznstudio.galacticraft.entity.asteroid;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.entity.data.GalacticraftTrackedDataHandlers;
 import io.netty.buffer.Unpooled;
 import io.netty.util.internal.ConcurrentSet;
+import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
@@ -13,10 +15,14 @@ import net.minecraft.entity.MovementType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
@@ -34,6 +40,10 @@ public class OreAsteroidEntity extends Entity {
     public float spinPitch;
     public float spinYaw;
     public Block block;
+
+    private boolean positiveX;
+    private boolean positiveZ;
+
     private byte exploded = 0;
 
     private boolean firstTick = false;
@@ -41,11 +51,6 @@ public class OreAsteroidEntity extends Entity {
     public OreAsteroidEntity(EntityType<OreAsteroidEntity> entityType, World world_1) {
         super(entityType, world_1);
         asteroids.add(this);
-    }
-
-    @Override
-    public boolean isOnFire() {
-        return false;
     }
 
     @Override
@@ -57,6 +62,9 @@ public class OreAsteroidEntity extends Entity {
         } else {
             yaw = this.world.random.nextInt(360) - 180;
             pitch = this.world.random.nextInt(90);
+
+            positiveX = this.world.random.nextInt(1) == 1;
+            positiveZ = this.world.random.nextInt(1) == 1;
             firstTick = false;
         }
 
@@ -73,7 +81,9 @@ public class OreAsteroidEntity extends Entity {
                 world.createExplosion(this, this.getPos().x, this.getPos().y, this.getPos().z, 5.0F, false, Explosion.DestructionType.NONE);
                 exploded = 2;
             } else {
-                world.setBlockState(getBlockPos(), this.getAsteroidType().getDefaultState());
+                if (this.getAsteroidType() != null) {
+                    world.setBlockState(getBlockPos(), this.getAsteroidType().getDefaultState());
+                }
                 remove();
             }
         }
@@ -87,7 +97,15 @@ public class OreAsteroidEntity extends Entity {
         this.yaw += 2.0F;
         this.pitch += 2.0F;
 
-        this.setVelocity(0, -2, 0);
+        if (this.world.random.nextInt(3) <= 2) {
+            this.addVelocity(0.0D, -0.02D, 0.0D);
+        }
+        if (this.world.random.nextInt(1) == 1) {
+            this.addVelocity(positiveX ? 0.01D : -0.01D, 0.0D, 0.0D);
+        }
+        if (this.world.random.nextInt(1) == 1) {
+            this.addVelocity(0.0D, 0.0D, positiveZ ? 0.01D : -0.01D);
+        }
 
         this.move(MovementType.SELF, this.getVelocity());
     }

@@ -13,6 +13,7 @@ import com.hrznstudio.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTyp
 import com.hrznstudio.galacticraft.world.gen.chunk.MarsChunkGeneratorConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.util.Identifier;
@@ -190,6 +191,11 @@ public class MarsDimension extends Dimension implements CelestialBody {
     @Override
     public String getName() {
         return I18n.translate("mars");
+    }
+
+    @Override
+    public Block[] getOreAsteroidBlocks() {
+        return new Block[0];
     }
 
 }

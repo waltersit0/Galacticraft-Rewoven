@@ -6,6 +6,7 @@ import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
+import com.hrznstudio.galacticraft.entity.asteroid.SpaceDebrisEntity;
 import com.hrznstudio.galacticraft.entity.data.GalacticraftTrackedDataHandlers;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
@@ -62,6 +63,7 @@ public class Galacticraft implements ModInitializer {
         WorldGenerator.register();
         GalacticraftPackets.register();
         GalacticraftTrackedDataHandlers.register();
+        SpaceDebrisEntity.registerUseEntityCallback();
 
         if (FabricLoader.getInstance().isModLoaded("modmenu")) {
             try {
