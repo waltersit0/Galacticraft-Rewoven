@@ -1,17 +1,28 @@
 package com.hrznstudio.galacticraft.mixin;
 
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.space.CelestialBody;
 import com.hrznstudio.galacticraft.api.wire.WireNetwork;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.entity.asteroid.OreAsteroidEntity;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.PacketByteBuf;
+import net.minecraft.util.registry.Registry;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import javax.annotation.Nonnull;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
@@ -20,6 +31,10 @@ import java.util.function.Consumer;
  */
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldMixin {
+
+    @Shadow @Final private MinecraftServer server;
+
+    @Shadow @Nonnull public abstract MinecraftServer getServer();
 
     private boolean hasRunOnceForWorldReload = false;
 
@@ -49,12 +64,15 @@ public abstract class ServerWorldMixin {
                     entity.x = x;
                     entity.z = z;
                     entity.y = 255;
+                    entity.setPosition(entity.x, entity.y, entity.z);
                     entity.method_18003(x, 255, z);
                     entity.prevX = x;
                     entity.prevY = 255;
                     entity.prevZ = z;
                     System.out.println("s");
                     ((ServerWorld)(Object)this).spawnEntity(entity);
+                    ServerSidePacketRegistry.INSTANCE.sendToPlayer(playerEntity, new CustomPayloadS2CPacket(new Identifier(Constants.MOD_ID, "asteroid_entity_spawn"), new PacketByteBuf(new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeVarInt(Registry.ENTITY_TYPE.getRawId(entity.getType())).writeVarInt(entity.getEntityId()).writeUuid(entity.getUuid()).writeIdentifier(Registry.BLOCK.getId(entity.block)).writeDouble(entity.x).writeDouble(entity.y).writeDouble(entity.z).writeByte((int)(entity.pitch / 360F * 256F))).writeByte((int)(entity.pitch / 360F * 256F)))));
+
                 }
             };
             for (PlayerEntity playerEntity1 : ((ServerWorld)(Object)this).getPlayers()) {

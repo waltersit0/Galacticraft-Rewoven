@@ -16,6 +16,7 @@ import com.hrznstudio.galacticraft.blocks.machines.coalgenerator.CoalGeneratorBl
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorBlock;
 import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCompressorBlock;
 import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleBlock;
+import com.hrznstudio.galacticraft.blocks.machines.forcefield.ForceFieldBlock;
 import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorBlock;
 import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryBlock;
 import com.hrznstudio.galacticraft.blocks.natural.ScorchedRockBlock;
@@ -151,6 +152,7 @@ public class GalacticraftBlocks {
     public static final Block BASIC_SOLAR_PANEL_PART = registerBlockWithoutItem(new BasicSolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.BASIC_SOLAR_PANEL_PART);
     public static final Block ENERGY_STORAGE_MODULE = registerMachine(new EnergyStorageModuleBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.ENERGY_STORAGE_MODULE);
     public static final Block OXYGEN_COLLECTOR = registerMachine(new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.OXYGEN_COLLECTOR);
+    public static final Block FORCE_FIELD = registerMachine(new ForceFieldBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.FORCE_FIELD);
     public static final Block REFINERY = registerMachine(new RefineryBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.REFINERY);
 
     // Liquids

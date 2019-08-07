@@ -20,8 +20,8 @@ public class GalacticraftEntityTypes {
 
     public static final EntityType<MoonVillagerEntity> MOON_VILLAGER = FabricEntityTypeBuilder.create(EntityCategory.CREATURE, MoonVillagerEntity::new).build();
     public static final EntityType<T1RocketEntity> T1_ROCKET = FabricEntityTypeBuilder.create(EntityCategory.MISC, T1RocketEntity::new).size(EntityDimensions.fixed(2, 4)).build();
-    public static final EntityType<OreAsteroidEntity> ORE_ASTEROID = FabricEntityTypeBuilder.create(EntityCategory.MISC, OreAsteroidEntity::new).size(EntityDimensions.fixed(3, 3)).setImmuneToFire().build();
-    public static final EntityType<SpaceDebrisEntity> SPACE_DEBRIS = FabricEntityTypeBuilder.create(EntityCategory.MISC, SpaceDebrisEntity::new).size(EntityDimensions.fixed(3, 3)).setImmuneToFire().build();
+    public static final EntityType<OreAsteroidEntity> ORE_ASTEROID = FabricEntityTypeBuilder.create(EntityCategory.MISC, OreAsteroidEntity::new).size(EntityDimensions.fixed(1, 1)).setImmuneToFire().build();
+    public static final EntityType<SpaceDebrisEntity> SPACE_DEBRIS = FabricEntityTypeBuilder.create(EntityCategory.MISC, SpaceDebrisEntity::new).size(EntityDimensions.fixed(1, 1)).setImmuneToFire().build();
 
     public static void register() {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Entities.MOON_VILLAGER), MOON_VILLAGER);

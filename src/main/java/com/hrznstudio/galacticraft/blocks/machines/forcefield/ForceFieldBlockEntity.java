@@ -1,33 +1,18 @@
 package com.hrznstudio.galacticraft.blocks.machines.forcefield;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import com.hrznstudio.galacticraft.api.configurable.SideOption;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import com.hrznstudio.galacticraft.entity.asteroid.OreAsteroidEntity;
 import com.hrznstudio.galacticraft.items.BatteryItem;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
-import com.hrznstudio.galacticraft.recipes.FabricationRecipe;
-import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
-import com.hrznstudio.galacticraft.util.BlockOptionUtils;
-import io.github.cottonmc.energy.api.EnergyAttribute;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.Tickable;
-import net.minecraft.util.math.Direction;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Optional;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -38,8 +23,10 @@ public class ForceFieldBlockEntity extends ConfigurableElectricMachineBlockEntit
 
     public ForceFieldStatus status = ForceFieldStatus.INSUFFICIENT_POWER;
 
+    List<OreAsteroidEntity> asteroidsNear = new ArrayList<>();
+
     public ForceFieldBlockEntity() {
-        super(GalacticraftBlockEntities.CIRCUIT_FABRICATOR_TYPE);
+        super(GalacticraftBlockEntities.FORCE_FIELD_TYPE);
     }
 
     @Override
@@ -57,10 +44,10 @@ public class ForceFieldBlockEntity extends ConfigurableElectricMachineBlockEntit
         if (world.isClient || !active()) {
             return;
         }
-
+        asteroidsNear.clear();
         attemptChargeFromStack(0);
 
-        if (this.energy.getCurrentEnergy() <= 2) { //TODO make a balanced amount of power usage
+        if (this.energy.getCurrentEnergy() <= -100000) { //TODO make a balanced amount of power usage
             status = ForceFieldStatus.INSUFFICIENT_POWER;
         } else {
             status = ForceFieldStatus.PROTECTED;
@@ -70,19 +57,27 @@ public class ForceFieldBlockEntity extends ConfigurableElectricMachineBlockEntit
             return;
         }
 
-        this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 2, Simulation.ACTION);
+        System.out.println("AHHH");
 
+        if (OreAsteroidEntity.asteroids.size() > 0) {
+            Iterator<OreAsteroidEntity> var9 = OreAsteroidEntity.asteroids.iterator();
+            do {
+                OreAsteroidEntity asteroid = var9.next();
+                if (asteroid.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) >= 8 * 8 && asteroid.bounceTime <= 0) {
+                    asteroidsNear.add(asteroid);
+                }
+            } while (var9.hasNext());
+        }
+        for (OreAsteroidEntity asteroid : asteroidsNear) {
+            int r = world.random.nextInt(9);
+            if (r % 2 == 0) {
+                asteroid.addVelocity(world.random.nextDouble() * 13.0D * (asteroid.positiveZ ? 1.0D : -1.0D), 13.0D, world.random.nextDouble() * (asteroid.positiveX ? 1.0D : -1.0D));
+            } else {
+                asteroid.addVelocity(world.random.nextDouble() * (asteroid.positiveZ ? 1.0D : -1.0D), 13.0D, world.random.nextDouble() * 13 * (asteroid.positiveX ? 1.0D : -1.0D));
+            }
+            asteroid.bounceTime = 50;
+        }
 
-
-    }
-
-    @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        return super.toTag(tag);
-    }
-
-    @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
+        //this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 2, Simulation.ACTION);
     }
 }
