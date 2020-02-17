@@ -86,6 +86,5 @@ public class EvolvedZombieModel<EVOLVEDZOMBIE_ENTITY> extends BipedEntityModel<E
 	@Override
 	public void render(EvolvedZombieEntity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		super.render(entity, f, f1, f2, f3, f4, f5);
-		this.body.render(1F);
 	}
 }
