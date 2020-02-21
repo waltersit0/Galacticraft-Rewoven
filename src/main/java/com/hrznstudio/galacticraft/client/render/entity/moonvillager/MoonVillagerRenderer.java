@@ -22,8 +22,11 @@
 
 package com.hrznstudio.galacticraft.client.render.entity.moonvillager;
 
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.client.model.entity.moonvillager.MoonVillagerModel;
 import com.hrznstudio.galacticraft.entity.moonvillager.MoonVillagerEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;
@@ -31,6 +34,7 @@ import net.minecraft.util.Identifier;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
+@Environment(EnvType.CLIENT)
 public class MoonVillagerRenderer extends MobEntityRenderer<MoonVillagerEntity, MoonVillagerModel<MoonVillagerEntity>> {
 
     public MoonVillagerRenderer(EntityRenderDispatcher entityRenderDispatcher_1) {
@@ -39,6 +43,6 @@ public class MoonVillagerRenderer extends MobEntityRenderer<MoonVillagerEntity, 
 
     @Override
     protected Identifier getTexture(MoonVillagerEntity moonVillagerEntity) {
-        return new Identifier("galacticraft-rewoven:textures/entity/moon_villager/moon_villager.png");
+        return new Identifier(Constants.MOD_ID, "textures/entity/moon_villager/moon_villager.png");
     }
 }
