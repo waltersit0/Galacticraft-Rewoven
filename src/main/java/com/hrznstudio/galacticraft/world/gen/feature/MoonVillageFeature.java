@@ -2,7 +2,6 @@ package com.hrznstudio.galacticraft.world.gen.feature;
 
 import com.hrznstudio.galacticraft.structure.MoonVillageStart;
 import com.mojang.datafixers.Dynamic;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
@@ -15,14 +14,17 @@ public class MoonVillageFeature extends StructureFeature<DefaultFeatureConfig> {
         super(configFactory);
     }
 
-    protected int getSpacing(DimensionType dimensionType, ChunkGeneratorConfig chunkGeneratorConfig) {
+    @Override
+    protected int getSpacing(ChunkGeneratorConfig chunkGeneratorConfig) {
         return chunkGeneratorConfig.getVillageDistance();
     }
 
-    protected int getSeparation(DimensionType dimensionType, ChunkGeneratorConfig chunkGenerationConfig) {
-        return chunkGenerationConfig.getVillageSeparation();
+    @Override
+    protected int getSeparation(ChunkGeneratorConfig chunkGeneratorConfig) {
+        return chunkGeneratorConfig.getVillageSeparation();
     }
 
+    @Override
     protected int getSeedModifier(ChunkGeneratorConfig chunkGeneratorConfig) {
         return 312378912;
     }

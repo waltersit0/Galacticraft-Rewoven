@@ -25,10 +25,8 @@ package com.hrznstudio.galacticraft.entity;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
-import com.mojang.datafixers.Dynamic;
-import net.minecraft.datafixer.NbtOps;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.pathing.MobNavigation;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
@@ -36,12 +34,10 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.village.VillagerData;
-import net.minecraft.village.VillagerGossips;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.village.VillagerType;
 import net.minecraft.world.World;
@@ -79,7 +75,9 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
         && Galacticraft.MOON_VILLAGER_TYPE_REGISTRY.getId(villagerData.getType()) != null) {
             super.setVillagerData(villagerData);
         } else {
-            Galacticraft.logger.warn("Invaild profession or type for moon villager");
+            if (Galacticraft.configManager.get().isDebugLogEnabled()) {
+                new RuntimeException("Invalid profession or type for moon villager").printStackTrace();
+            }
         }
     }
 
@@ -149,7 +147,7 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
         }
 
         MoonVillagerEntity villagerEntity = new MoonVillagerEntity(GalacticraftEntityTypes.MOON_VILLAGER, this.world, villagerType3);
-        villagerEntity.initialize(this.world, this.world.getLocalDifficulty(villagerEntity.getBlockPos()), SpawnReason.BREEDING, (EntityData)null, (CompoundTag)null);
+        villagerEntity.initialize(this.world, this.world.getLocalDifficulty(villagerEntity.getBlockPos()), SpawnReason.BREEDING, null, null);
         return villagerEntity;
     }
 
