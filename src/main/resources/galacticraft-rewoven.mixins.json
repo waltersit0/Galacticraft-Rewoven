@@ -18,6 +18,7 @@
   ],
   "client": [
     "client.AbstractClientPlayerEntityMixin",
+    "client.BackgroundRendererMixin",
     "client.HandledScreenHooks",
     "client.InGameHudMixin",
     "client.MusicTrackerMixin",

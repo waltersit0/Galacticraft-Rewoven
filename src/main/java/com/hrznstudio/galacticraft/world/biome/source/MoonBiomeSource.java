@@ -1,27 +1,19 @@
 package com.hrznstudio.galacticraft.world.biome.source;
 
 import com.google.common.collect.ImmutableSet;
-import java.util.Set;
-import java.util.function.LongFunction;
-
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.biome.layer.MoonBiomeLayers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.layer.BiomeLayers;
-import net.minecraft.world.biome.layer.ContinentLayer;
-import net.minecraft.world.biome.layer.util.CachingLayerContext;
-import net.minecraft.world.biome.layer.util.CachingLayerSampler;
-import net.minecraft.world.biome.layer.util.LayerFactory;
-import net.minecraft.world.biome.layer.util.LayerSampleContext;
 import net.minecraft.world.biome.source.BiomeLayerSampler;
 import net.minecraft.world.biome.source.BiomeSource;
 
+import java.util.Set;
+
 public class MoonBiomeSource extends BiomeSource {
    private final BiomeLayerSampler sampler;
-   private static final Set<Biome> BIOMES = ImmutableSet.of(GalacticraftBiomes.MOON_HIGHLANDS_PLAINS, GalacticraftBiomes.MOON_HIGHLANDS_CRATERS, GalacticraftBiomes.MOON_HIGHLANDS_ROCKS,
-           GalacticraftBiomes.MOON_MARE_PLAINS, GalacticraftBiomes.MOON_MARE_CRATERS, GalacticraftBiomes.MOON_MARE_ROCKS, GalacticraftBiomes.MOON_CHEESE_FOREST);
+   private static final Set<Biome> BIOMES = ImmutableSet.copyOf(GalacticraftBiomes.MOON_BIOMES);
    private final int biomeSize;
 
    public MoonBiomeSource(long seed, int biomeSize) {

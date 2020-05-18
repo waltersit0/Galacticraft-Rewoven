@@ -22,35 +22,25 @@
 
 package com.hrznstudio.galacticraft.world.biome.moon;
 
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
-import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
-import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.decorator.ConfiguredDecorator;
 import net.minecraft.world.gen.decorator.Decorator;
 import net.minecraft.world.gen.decorator.DecoratorConfig;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.FeatureConfig;
-import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
-import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
-
-import java.util.Set;
 
 /**
  * Base moon biome.
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public abstract class MoonBiome extends Biome implements SpaceBiome {
-
-    public static final TernarySurfaceConfig MOON_HIGHLANDS_BIOME_CONFIG = new TernarySurfaceConfig(GalacticraftBlocks.MOON_TURF.getDefaultState(), GalacticraftBlocks.MOON_DIRT.getDefaultState(), GalacticraftBlocks.MOON_TURF.getDefaultState());
 
     public MoonBiome(Settings settings) {
         super(settings);
@@ -60,6 +50,15 @@ public abstract class MoonBiome extends Biome implements SpaceBiome {
         this.addFeature(GenerationStep.Feature.RAW_GENERATION, GalacticraftFeatures.MOON_VILLAGE.configure(new DefaultFeatureConfig()).createDecoratedFeature(new ConfiguredDecorator<>(Decorator.NOPE, DecoratorConfig.DEFAULT)));
         this.addStructureFeature(GalacticraftFeatures.MOON_VILLAGE.configure(FeatureConfig.DEFAULT));
     }
+
+    @Override
+    public String getTranslationKey() {
+        return "biome." + Constants.MOD_ID + ".moon." + getCategoryName() + "." + getBiomeName();
+    }
+
+    protected abstract String getCategoryName();
+
+    protected abstract String getBiomeName();
 
     @Override
     protected float computeTemperature(BlockPos blockPos) {
