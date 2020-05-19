@@ -22,14 +22,13 @@
 
 package com.hrznstudio.galacticraft.world.biome.moon.highlands;
 
-import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import net.minecraft.world.biome.BiomeEffects;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public final class MoonHighlandsPlainsBiome extends MoonHighlandsBiome implements SpaceBiome {
+public final class MoonHighlandsPlainsBiome extends MoonHighlandsBiome {
 
     public MoonHighlandsPlainsBiome() {
         super((new Settings())

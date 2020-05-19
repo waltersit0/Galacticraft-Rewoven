@@ -2,7 +2,6 @@ package com.hrznstudio.galacticraft.world.gen.chunk;
 
 import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
 import com.hrznstudio.galacticraft.world.biome.source.MoonBiomeSource;
-import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Blocks;
@@ -17,13 +16,12 @@ import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.*;
+import net.minecraft.world.gen.ChunkRandom;
+import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.SurfaceChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -39,19 +37,19 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
 
     });
 
-    private static final Method SAMPLE_NOISE = getNoiseMethod(); //todo find a better way to do this
-
     private final OctavePerlinNoiseSampler depthNoiseSampler;
 //    private final PhantomSpawner phantomSpawner = new PhantomSpawner();
 //    private final PillagerSpawner pillagerSpawner = new PillagerSpawner();
 //    private final CatSpawner catSpawner = new CatSpawner();
 //    private final ZombieSiegeManager zombieSiegeManager = new ZombieSiegeManager();
     private final MoonChunkGeneratorConfig generatorConfig;
+    private final long seed;
 
     public MoonChunkGenerator(MoonBiomeSource biomeSource, long seed, MoonChunkGeneratorConfig config) {
         super(biomeSource, seed, config, 4, 8, 256, true);
         this.generatorConfig = config;
         this.random.consume(4822);
+        this.seed = seed;
         this.depthNoiseSampler = new OctavePerlinNoiseSampler(this.random, IntStream.rangeClosed(-15, 0));
     }
 
@@ -156,47 +154,40 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     @Override
     public void buildSurface(ChunkRegion region, Chunk chunk) {
         super.buildSurface(region, chunk);
-        if (!chunk.getStructureReferences().containsKey(GalacticraftFeatures.MOON_VILLAGE.getName())) {
-            createCraters(chunk, region);
-        }
+        createCraters(chunk, region);
     }
 
     private void createCraters(Chunk chunk, ChunkRegion region) {
         for (int cx = chunk.getPos().x - 2; cx <= chunk.getPos().x + 2; cx++) {
             for (int cz = chunk.getPos().z - 2; cz <= chunk.getPos().z + 2; cz++) {
-                for (int x = 0; x < 16; x++) {
-                    for (int z = 0; z < 16; z++) {
-                        if (Math.abs(this.randFromPoint(cx << 4 + x, (cz << 4 + z) * 1000)) < this.sampleNoise(x << 4 + x, cz << 4 + z) / 300) {
-                            Random random = new Random((cx << 4) + x + ((cz << 4) + z) * 5000);
+                Biome biome = region.getBiome(new BlockPos(chunk.getPos().x << 4 + 8, 0, chunk.getPos().z << 4));
+                if (biome instanceof SpaceBiome && ((SpaceBiome) biome).hasCraters()) {
+                    for (int x = 0; x < 16; x++) {
+                        for (int z = 0; z < 16; z++) {
+                            if (Math.abs(this.randFromPoint(cx << 4 + x, (cz << 4 + z) * 1000)) < this.sampleDepthNoise(x << 4 + x, cz << 4 + z) / (((SpaceBiome) biome).getCraterChance())) {
+                                Random random = new Random((cx << 4) + x + ((cz << 4) + z) * 102L);
+                                int size;
 
-                            int size;
-
-                            int i = random.nextInt(14 + 8 + 2 + 1);
-                            if (i < 1) {
-                                size = random.nextInt(30 - 26) + 26;
-                            } else if (i < 2) {
-                                size = random.nextInt(17 - 13) + 13;
-                            } else if (i < 8) {
-                                size = random.nextInt(25 - 18) + 18;
-                            } else {
-                                size = random.nextInt(12 - 8) + 8;
-                            }
-
-                            if (region.getBiome(new BlockPos(cx << 4, 65, cz << 4)) instanceof SpaceBiome) {
-                                if (((SpaceBiome) region.getBiome(new BlockPos(cx << 4, 65, cz << 4))).hasCraters()) {
-                                    if (((SpaceBiome) region.getBiome(new BlockPos(cx << 4, 65, cz << 4))).forceSmallCraters()) {
-                                        size = random.nextInt(12 - 8) + 8;
-                                    } else if (((SpaceBiome) region.getBiome(new BlockPos(cx << 4, 65, cz << 4))).forceMediumCraters()) {
-                                        size = random.nextInt(25 - 18) + 18;
-                                    } else if (((SpaceBiome) region.getBiome(new BlockPos(cx << 4, 65, cz << 4))).forceLargeCraters()) {
-                                        size = random.nextInt(17 - 13) + 13;
-                                    }
+                                int i = random.nextInt(14 + 8 + 2 + 1);
+                                if (i < 1) {
+                                    size = random.nextInt(30 - 26) + 26;
+                                } else if (i < 2) {
+                                    size = random.nextInt(17 - 13) + 13;
+                                } else if (i < 8) {
+                                    size = random.nextInt(25 - 18) + 18;
                                 } else {
-                                    break;
+                                    size = random.nextInt(12 - 8) + 8;
                                 }
-                            }
 
-                            this.makeCrater((cx << 4) + x, (cz << 4) + z, chunk.getPos().x << 4, chunk.getPos().z << 4, size, chunk);
+                                if (((SpaceBiome) biome).forceSmallCraters()) {
+                                    size = random.nextInt(12 - 8) + 8;
+                                } else if (((SpaceBiome) biome).forceMediumCraters()) {
+                                    size = random.nextInt(25 - 18) + 18;
+                                } else if (((SpaceBiome) biome).forceLargeCraters()) {
+                                    size = random.nextInt(17 - 13) + 13;
+                                }
+                                this.makeCrater((cx << 4) + x, (cz << 4) + z, chunk.getPos().x << 4, chunk.getPos().z << 4, size, chunk);
+                            }
                         }
                     }
                 }
@@ -211,52 +202,6 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         return 1.0D - (n * (n * n * 15731 + 789221) + 1376312589 & 0x7fffffff) / 1073741824.0;
     }
 
-    private static Method getNoiseMethod() {
-        try {
-            Method method = SurfaceChunkGenerator.class.getDeclaredMethod("sampleNoise", int.class, int.class, int.class, double.class, double.class, double.class, double.class);
-            method.setAccessible(true);
-            return method;
-        } catch (NoSuchMethodException e) {
-            try {
-                //noinspection JavaReflectionMemberAccess
-                Method method = SurfaceChunkGenerator.class.getDeclaredMethod("method_16411", int.class, int.class, int.class, double.class, double.class, double.class, double.class);
-                method.setAccessible(true);
-                return method;
-            } catch (NoSuchMethodException ex) {
-                ex.addSuppressed(e);
-                RuntimeException exception = new RuntimeException("Failed to get noise method");
-                exception.addSuppressed(ex);
-                throw exception;
-            }
-        }
-    }
-
-    private double sampleNoise(int x, int y) {
-        double d = 0;
-        try {
-            d = ((double)SAMPLE_NOISE.invoke(this, x * 200, 10.0D, y * 200, 1.0D, 0.0D, true)) * 65535.0D / 8000.0D;
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            RuntimeException exception = new RuntimeException("Failed to get noise.");
-            exception.addSuppressed(e);
-        }
-        if (d < 0.0D) {
-            d = -d * 0.3D;
-        }
-
-        d = d * 3.0D - 2.0D;
-        if (d < 0.0D) {
-            d /= 28.0D;
-        } else {
-            if (d > 1.0D) {
-                d = 1.0D;
-            }
-
-            d /= 40.0D;
-        }
-
-        return d;
-    }
-
     private void makeCrater(int craterX, int craterZ, int chunkX, int chunkZ, int size, Chunk chunk) {
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
@@ -266,8 +211,7 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
                     xDev /= size;
                     zDev /= size;
                     final double sqrtY = xDev * xDev + zDev * zDev;
-                    double yDev = sqrtY * sqrtY * 6;
-                    yDev = 5 - yDev;
+                    final double yDev = 5 -(sqrtY * sqrtY * 6);
                     int helper = 0;
                     for (int y = 127; y > 0; y--) {
                         if (!chunk.getBlockState(new BlockPos(x, y, z)).isAir() && helper <= yDev) {

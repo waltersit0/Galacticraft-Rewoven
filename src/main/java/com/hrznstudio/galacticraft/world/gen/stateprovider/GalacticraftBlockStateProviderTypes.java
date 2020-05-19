@@ -21,7 +21,7 @@ public class GalacticraftBlockStateProviderTypes {
         try {
             Constructor<BlockStateProviderType> constructor = BlockStateProviderType.class.getDeclaredConstructor(Function.class);
             constructor.setAccessible(true);
-            return constructor.newInstance(function);
+            return (BlockStateProviderType<P>)constructor.newInstance(function);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to Instantiate BlockStateProvider!");

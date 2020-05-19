@@ -11,7 +11,7 @@ public enum MoonBaseBiomeLayer implements InitLayer {
         if (i == 12345) { // :)
             return MoonBiomeLayers.MOON_CHEESE_FOREST_ID;
         }
-        if (i > 40000) {
+        if (i > 35000) {
             return MoonBiomeLayers.MOON_HIGHLANDS_PLAINS_ID;
         } else {
             return MoonBiomeLayers.MOON_MARE_PLAINS_ID;
